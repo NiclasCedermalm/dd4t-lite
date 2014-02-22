@@ -1,0 +1,81 @@
+<page id="tcm:1-1234-64" title="Test Page 1">
+   <revisionDate>2014-01-01T12:00:00</revisionDate>
+    <regions>
+        <region name="main">
+            <componentPresentations>
+                <componentPresentation dynamic="false">
+                    <component id="tcm:1-4567" title="Article #1">
+                         <content>
+                             <field name="field1" type="Text" xpath="">
+                                 <values>
+                                    <text>VALUE1</text>
+                                 </values>
+                             </field>
+                             <field name="field2" type="Embedded" xpath="">
+                                 <values>
+                                    <embedded>
+                                        <field name="subfield1" type="Text">
+                                            <values><text>VALUE2</text></values>
+                                        </field>
+                                        <field name="subfield2" type="Number">
+                                            <values><number>1234</number></values>
+                                        </field>
+                                    </embedded>
+                                 </values>
+                             </field>
+                             <field name="field3" type="Keyword" xpath="">
+                                <values>
+                                    <keyword taxonomyId="tcm:1-3939" path="/path1/path2" key="KEYWORD1"/>
+                                    <keyword taxonomyId="tcm:1-3940" path="/path1/path2" key="KEYWORD2"/>
+                                    <keyword taxonomyId="tcm:1-3942" path="/path1/path2" key="KEYWORD3"/>
+                                </values>
+                             </field>
+                            <field name="field4" type="Date" xpath="">
+                                <values>
+                                    <date>2014-01-01T12:00:00</date>
+                                </values>
+                            </field>
+                             <field name="field5" type="MultiMediaLink" xpath="">
+                                 <values>
+                                     <multimedia>/assets/img1.jpg</multimedia>
+                                 </values>
+                             </field>
+                             <field name="field5" type="MultiMediaLink" xpath="">
+                                 <values>
+                                     <multimedia>/assets/img1.jpg</multimedia>
+                                 </values>
+                             </field>
+                             <field name="field6" type="ComponentLink" xpath="">
+                                 <values>
+                                     <link>tcm:1-39330</link>
+                                 </values>
+                             </field>
+                         </content>
+                        <metadata>
+                            <field name="metadata1" type="Text" xpath="">
+                                <values>
+                                    <text>VALUE1</text>
+                                </values>
+                            </field>
+                        </metadata>
+                    </component>
+                    <template id="tcm:1-5664" title="Article Full" viewName="fullArticle">
+                        <metadata>
+                        </metadata>
+                    </template>
+                </componentPresentation>
+            </componentPresentations>
+        </region>
+    </regions>
+    <template id="tcm:1-5666" title="Std Page" viewName="stdPage">
+        <metadata>
+        </metadata>
+    </template>
+    <metadata>
+        <field name="description" type="Text" xpath="">
+            <values>
+                <text>Very cool page</text>
+            </values>
+        </field>
+    </metadata>
+</page>
