@@ -257,32 +257,17 @@ namespace DD4TLite.BuildingBlocks
          
          private void OutputComponentTemplate(StringBuilder sb)
          {
-             /*
+            
              String viewName = this.Package.GetByName("viewName").GetAsString();
-             sb.Append("<template viewName=");
-             sb.Append(GetQuotedString(viewName));
-             sb.Append("/>");
-             */
             
              ComponentTemplate template = this.GetComponentTemplate();
              sb.Append("<template id=");
              sb.Append(GetQuotedString(template.Id));
              sb.Append(" title=");
              sb.Append(GetQuotedString(template.Title));
-             sb.Append(" viewName=");
-            
-             ItemFields templateMetadata = this.GetMetaData(template);
-             String viewName;
-             if (templateMetadata.Contains("viewName"))
-             {
-                 viewName = templateMetadata["viewName"].ToString();
-             }
-             else
-             {
-                 viewName = "undefined";
-             }
+             sb.Append(" viewName=");            
              sb.Append(GetQuotedString(viewName));
-             sb.Append(">");
+             sb.Append(">\n");
              this.OutputMetdataFields(template, sb);
              sb.Append("</template>\n"); 
 
