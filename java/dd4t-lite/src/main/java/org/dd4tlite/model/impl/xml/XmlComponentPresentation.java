@@ -15,6 +15,7 @@ import java.util.Date;
  */
 public class XmlComponentPresentation implements ComponentPresentation {
 
+    // NEEDED? Better to create a new XML element for dynamic CPs: <dynamicComponentPresentation componentId="" templateId=""/>
     @Attribute (required = false)
     private boolean dynamic = false;
 

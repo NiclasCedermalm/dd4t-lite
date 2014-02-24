@@ -19,7 +19,7 @@ public class XmlValues {
             @ElementList(entry="keyword", inline=true, type=XmlKeywordValue.class),
             @ElementList(entry="date", inline=true, type=XmlDateField.class),
             @ElementList(entry="multimedia", inline=true, type=XmlMultimediaLink.class),
-            @ElementList(entry="link", inline=true, type=XmlComponentLink.class),
+            @ElementList(entry="componentLink", inline=true, type=XmlComponentLink.class),
             @ElementList (entry="embedded",inline=true, type=XmlEmbeddedValue.class)
     })
     private List<XmlValue> values;

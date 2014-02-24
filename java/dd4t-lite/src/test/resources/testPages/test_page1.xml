@@ -1,9 +1,8 @@
-<page id="tcm:1-1234-64" title="Test Page 1">
-   <revisionDate>2014-01-01T12:00:00</revisionDate>
+<page id="tcm:1-1234-64" title="Test Page 1" revisionDate="2014-01-01T12:00:00">
     <regions>
         <region name="main">
             <componentPresentations>
-                <componentPresentation dynamic="false">
+                <componentPresentation>
                     <component id="tcm:1-4567" title="Article #1">
                          <content>
                              <field name="field1" type="Text" xpath="">
@@ -47,7 +46,12 @@
                              </field>
                              <field name="field6" type="ComponentLink" xpath="">
                                  <values>
-                                     <link>tcm:1-39330</link>
+                                     <componentLink>tcm:1-39330</componentLink>
+                                 </values>
+                             </field>
+                             <field name="field7" type="Xhtml" xpath="">
+                                 <values>
+                                     <xhtml><![CDATA[<p>Some <b>HTML</b> comes here</p>]]></xhtml>
                                  </values>
                              </field>
                          </content>

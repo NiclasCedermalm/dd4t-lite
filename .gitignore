@@ -14,3 +14,10 @@ target/
 *.DS_Store
 *.swp
 *.out
+
+# C# and Visual Studio
+*.dll
+*.pdb
+obj/
+cms/lib
+cms/upload

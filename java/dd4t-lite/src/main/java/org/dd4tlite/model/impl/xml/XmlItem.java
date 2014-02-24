@@ -25,7 +25,7 @@ public abstract class XmlItem implements Item {
     @ElementList(required = false, type=XmlField.class)
     private List<Field> metadata;
 
-    @Element(name = "revisionDate", required = false)
+    @Attribute(name = "revisionDate", required = false)
     protected String revisionDateAsString;
 
     @Override
