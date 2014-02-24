@@ -1,0 +1,6 @@
+Add the following to make the upload to work. Create the config.xml by using the TcmUploadAssembly.exe. Please refer to the SDL Tridion documentation for details.
+
+Files:
+TcmUploadAssembly.exe
+TcmUploadAssembly.exe.config
+config.xml

@@ -19,5 +19,6 @@ target/
 *.dll
 *.pdb
 obj/
-cms/lib
-cms/upload
+cms/lib/*.xml
+cms/upload/*.xml
+cms/upload/*.exe*

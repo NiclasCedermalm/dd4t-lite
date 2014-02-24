@@ -1,0 +1,19 @@
+Add the following Tridion DLLs here to make the project to compile:
+Tridion.Common.dll
+Tridion.Common.xml
+Tridion.ContentManager.Common.XML
+Tridion.ContentManager.Common.dll
+Tridion.ContentManager.Publishing.dll
+Tridion.ContentManager.Publishing.xml
+Tridion.ContentManager.Queuing.XML
+Tridion.ContentManager.Queuing.dll
+Tridion.ContentManager.TemplateTypes.XML
+Tridion.ContentManager.TemplateTypes.dll
+Tridion.ContentManager.Templating.XML
+Tridion.ContentManager.Templating.dll
+Tridion.ContentManager.TypeRegistration.XML
+Tridion.ContentManager.TypeRegistration.dll
+Tridion.ContentManager.XML
+Tridion.ContentManager.dll
+Tridion.Logging.XML
+Tridion.Logging.dll
