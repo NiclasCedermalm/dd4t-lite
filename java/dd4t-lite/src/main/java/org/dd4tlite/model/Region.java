@@ -12,4 +12,6 @@ public interface Region {
     public String getName();
 
     public List<ComponentPresentation> getComponentPresentations();
+
+    public Template getTemplate();
 }

@@ -31,6 +31,7 @@ public class TestReadPages {
         System.out.println("Regions:");
         for ( Region region : page.getRegions() ) {
             System.out.println("Region: " + region.getName());
+            System.out.println("Region view name: " + region.getTemplate().getViewName());
             for (ComponentPresentation cp : region.getComponentPresentations() ) {
                 System.out.println("Is dynamic: " + cp.isDynamic());
                 System.out.println("View name: " + cp.getComponentTemplate().getViewName());
