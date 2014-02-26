@@ -77,6 +77,8 @@
   <ItemGroup>
     <Compile Include="BaseTemplate.cs" />
     <Compile Include="DD4TLiteComponentTemplate.cs" />
+    <Compile Include="DD4TLitePageTemplate.cs" />
+    <Compile Include="DD4TLiteRegionTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
