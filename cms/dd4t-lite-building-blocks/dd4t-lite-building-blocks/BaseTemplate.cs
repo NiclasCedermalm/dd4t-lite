@@ -72,9 +72,9 @@ namespace DD4TLite.BuildingBlocks
             return (ComponentTemplate) Engine.GetSession().GetObject(templateUri);
         }
 
-        protected ComponentTemplate GetComponentTemplate()
+        protected Template GetTemplate()
         {
-            return (ComponentTemplate) Engine.GetSession().GetObject(this.GetTemplateUri());
+            return (Template) Engine.GetSession().GetObject(this.GetTemplateUri());
         }
 
         protected String GetComponentUri()
@@ -265,6 +265,226 @@ namespace DD4TLite.BuildingBlocks
         protected string GetQuotedString(String value)
         {
             return "\"" + value + "\"";
+        }
+
+        protected void AddOutputToPackage(StringBuilder sb)
+        {
+            Item componentPresentation = Package.CreateHtmlItem(sb.ToString());
+            componentPresentation.Properties.Add(Item.ItemPropertyTcmUri, this.GetComponentUri());
+            Package.PushItem("Output", componentPresentation);
+        }
+
+        protected void OutputMetdataFields(RepositoryLocalObject item, StringBuilder sb)
+        {
+            sb.Append("<metadata>\n");
+            this.OutputFields(this.GetMetaData(item), sb);
+            sb.Append("</metadata>\n");
+        }
+
+        protected void OutputFields(ItemFields fields, StringBuilder sb)
+        {
+            if (fields == null) return;
+
+            foreach (ItemField field in fields)
+            {
+                sb.Append("<field name=");
+                sb.Append(GetQuotedString(field.Name));
+                sb.Append(" type=");
+                sb.Append(GetQuotedString(GetFieldType(field)));
+                sb.Append(" xpath=");
+                sb.Append(GetQuotedString("TBD")); // TODO: How to get the XPath????
+                sb.Append(">\n");
+                sb.Append("<values>\n");
+                this.OutputFieldValues(field, sb);
+                sb.Append("</values>\n");
+                sb.Append("</field>\n");
+            }
+        }
+
+        private void OutputFieldValues(ItemField field, StringBuilder sb)
+        {
+            // Multiline field???
+
+            // TODO: Can this selector be smarter by using overloading instead???
+
+            if (field is XhtmlField)
+            {
+                this.OutputXhtmlValues((XhtmlField)field, sb);
+            }
+            else if (field is TextField)
+            {
+                this.OutputTextValues((TextField)field, sb);
+            }
+            else if (field is NumberField)
+            {
+                this.OutputNumberValues((NumberField)field, sb);
+            }
+            else if (field is DateField)
+            {
+                this.OutputDateValues((DateField)field, sb);
+            }
+            else if (field is EmbeddedSchemaField)
+            {
+                this.OutputEmbeddedValues((EmbeddedSchemaField)field, sb);
+            }
+            else if (field is MultimediaLinkField)
+            {
+                this.OutputMultimediaValues((MultimediaLinkField)field, sb);
+            }
+            else if (field is ComponentLinkField)
+            {
+                this.OutputComponentLinkValues((ComponentLinkField)field, sb);
+            }
+            else if (field is KeywordField)
+            {
+                this.OutputKeywordValues((KeywordField)field, sb);
+            }
+        }
+
+        private void OutputXhtmlValues(XhtmlField field, StringBuilder sb)
+        {
+
+            // TODO: How to resolve component links???
+
+            foreach (string xhtmlValue in field.Values)
+            {
+                sb.Append("<xhtml>\n<![CDATA[");
+                sb.Append(TemplateUtilities.ResolveRichTextFieldXhtml(xhtmlValue));
+                sb.Append("]]></xhtml>\n");
+            }
+        }
+
+        private void OutputTextValues(TextField field, StringBuilder sb)
+        {
+            foreach (string textValue in field.Values)
+            {
+                sb.Append("<text>");
+                sb.Append(textValue);
+                sb.Append("</text>\n");
+            }
+        }
+
+        private void OutputNumberValues(NumberField field, StringBuilder sb)
+        {
+            foreach (double numberValue in field.Values)
+            {
+                sb.Append("<number>");
+                sb.Append(numberValue);
+                sb.Append("</number>\n");
+            }
+        }
+
+        private void OutputDateValues(DateField field, StringBuilder sb)
+        {
+            foreach (DateTime dateValue in field.Values)
+            {
+                sb.Append("<date>");
+                sb.Append(dateValue.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                sb.Append("</date>\n");
+            }
+        }
+
+        private void OutputEmbeddedValues(EmbeddedSchemaField field, StringBuilder sb)
+        {
+            foreach (ItemFields embeddedValue in field.Values)
+            {
+                sb.Append("<embedded>\n");
+                this.OutputFields(embeddedValue, sb);
+                sb.Append("</embedded>\n");
+            }
+        }
+
+        private void OutputMultimediaValues(MultimediaLinkField field, StringBuilder sb)
+        {
+            foreach (Component mmValue in field.Values)
+            {
+                // TODO: Append TCM ID as attribute here???
+                sb.Append("<multimedia>");
+                sb.Append(this.AddMultiMediaComponentToPackage(mmValue));
+                sb.Append("</multimedia>");
+            }
+        }
+
+        private void OutputComponentLinkValues(ComponentLinkField field, StringBuilder sb)
+        {
+            foreach (Component component in field.Values)
+            {
+                sb.Append("<componentLink>");
+                sb.Append(component.Id);
+                sb.Append("</componentLink>");
+            }
+        }
+
+        private void OutputKeywordValues(KeywordField field, StringBuilder sb)
+        {
+            foreach (Keyword keyword in field.Values)
+            {
+                sb.Append("<keyword taxonomyId=");
+                sb.Append(GetQuotedString(keyword.Id));
+                sb.Append(" path=");
+                sb.Append(GetQuotedString(keyword.Path));
+                sb.Append(" key=");
+                sb.Append(GetQuotedString(keyword.Key));
+                sb.Append("/>\n");
+            }
+        }
+
+        private String GetFieldType(ItemField field)
+        {
+            String type;
+            if (field is XhtmlField)
+            {
+                type = "Xhtml";
+            }
+            else if (field is TextField)
+            {
+                type = "Text";
+            }
+            else if (field is NumberField)
+            {
+                type = "Number";
+            }
+            else if (field is DateField)
+            {
+                type = "Date";
+            }
+            else if (field is EmbeddedSchemaField)
+            {
+                type = "Embedded";
+            }
+            else if (field is MultimediaLinkField)
+            {
+                type = "Multimedia";
+            }
+            else if (field is ComponentLinkField)
+            {
+                type = "ComponentLink";
+            }
+            else if (field is KeywordField)
+            {
+                type = "Keyword";
+            }
+            else
+            {
+                type = "Unknown";
+            }
+            return type;
+        }
+
+        protected void OutputTemplate(StringBuilder sb)
+        {
+            String viewName = this.Package.GetByName("viewName").GetAsString();
+
+            Template template = this.GetTemplate();
+            sb.Append("<template id=");
+            sb.Append(GetQuotedString(template.Id));
+            sb.Append(" title=");
+            sb.Append(GetQuotedString(template.Title));
+            sb.Append(" viewName=");
+            sb.Append(GetQuotedString(viewName));
+            sb.Append(">\n");
+            this.OutputMetdataFields(template, sb);
+            sb.Append("</template>\n");
         }
 
     }
