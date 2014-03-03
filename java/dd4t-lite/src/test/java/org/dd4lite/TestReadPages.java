@@ -1,13 +1,16 @@
 package org.dd4lite;
 
 import org.dd4tlite.factory.PageFactory;
-import org.dd4tlite.factory.org.dd4tlite.factory.impl.RawXmlPageFactory;
+import org.dd4tlite.factory.rawxml.RawXmlPageFactory;
 import org.dd4tlite.model.ComponentPresentation;
 import org.dd4tlite.model.Field;
 import org.dd4tlite.model.Page;
 import org.dd4tlite.model.Region;
+import org.dd4tlite.service.LinkResolver;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 /**
  * @author nic
@@ -16,9 +19,19 @@ public class TestReadPages {
 
     private PageFactory pageFactory;
 
+    static class TestLinkResolver implements LinkResolver {
+
+        @Override
+        public String resolveLink(String id, Page fromPage) {
+            return "http:/" + fromPage.getPath() + "/link.to." + id + ".html";
+        }
+    }
+
     @Before
     public void initialize() {
-        this.pageFactory = new RawXmlPageFactory("src/test/resources");
+        HashMap<Class<?>,Object> dependencies = new HashMap<>();
+        dependencies.put(LinkResolver.class, new TestLinkResolver());
+        this.pageFactory = new RawXmlPageFactory("src/test/resources", dependencies);
     }
 
     @Test

@@ -29,7 +29,7 @@ public interface Field {
     public String getName();
 
     /**
-     * Get the xPath of the field (used for SiteEdit)
+     * Get the xPath of the field (used for XPM)
      *
      * @return the xPath of the field
      */

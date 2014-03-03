@@ -7,10 +7,15 @@ import org.dd4tlite.model.Template;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.XmlUtils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * XML Page
@@ -28,15 +33,41 @@ public class XmlPage extends XmlItem implements Page {
     @Element
     private XmlTemplate template;
 
-    public XmlPage(String url) {
-        File xmlFile = new File(url);
-        this.path = xmlFile.getParent();
-        this.filename = xmlFile.getName();
-
-    }
-    public XmlPage(String path, String filename) {
+    protected XmlPage(String path, String filename) {
         this.path = path;
         this.filename = filename;
+    }
+
+    static public Page load(String path, String filename, InputStream inputStream) throws Exception{
+        return load(path, filename, inputStream, new HashMap());
+    }
+
+    static public Page load(String path, String filename, InputStream inputStream, Map initialSessionData) throws Exception {
+        XmlPage page = new XmlPage(path, filename);
+        initialSessionData.put(Page.class, page);
+        Serializer serializer = XmlUtils.createSerializer(initialSessionData);
+        try {
+            return serializer.read(page, inputStream); // TODO: Strict mode or not???
+        }
+        finally {
+            XmlUtils.closeSession(serializer);
+        }
+    }
+
+    static public Page load(String path, String filename, String xmlContent) throws Exception {
+        return load(path, filename, xmlContent, new HashMap());
+    }
+
+    static public Page load(String path, String filename, String xmlContent, Map initialSessionData) throws Exception {
+        XmlPage page = new XmlPage(path, filename);
+        initialSessionData.put(Page.class, page);
+        Serializer serializer = XmlUtils.createSerializer(initialSessionData);
+        try {
+            return serializer.read(page, xmlContent); // TODO: Strict mode or not???
+        }
+        finally {
+            XmlUtils.closeSession(serializer);
+        }
     }
 
     @Override
@@ -79,4 +110,5 @@ public class XmlPage extends XmlItem implements Page {
         }
         return null;
     }
+
 }
