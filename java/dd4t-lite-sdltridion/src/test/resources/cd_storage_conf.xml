@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration Version="6.1"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="schemas/cd_storage_conf.xsd">
+  <Global>
+    <ObjectCache Enabled="false">
+      <Policy Type="LRU" Class="com.tridion.cache.LRUPolicy">
+        <Param Name="MemSize" Value="16mb"/>
+      </Policy>
+      <Features>
+        <Feature Type="DependencyTracker" Class="com.tridion.cache.DependencyTracker"/>
+      </Features>
+    </ObjectCache>
+    <Storages>
+      <StorageBindings>
+
+      </StorageBindings>
+
+
+      <Storage Id="defaultFile" Class="com.tridion.storage.filesystem.FSDAOFactory" Type="filesystem" defaultFilesystem="false">
+        <Root Path="src/test/resources/content" />
+      </Storage>
+      <Storage Type="filesystem" Class="com.tridion.storage.filesystem.FSDAOFactory" Id="defaultDataFile" defaultFilesystem="true" defaultStorage="true">
+        <Root Path="src/test/resources/content/data" />
+      </Storage>
+
+    <Wrappers>
+    </Wrappers>
+
+    </Storages>
+  </Global>
+  <ItemTypes defaultStorageId="defaultDataFile">
+    <Item cached="true" typeMapping="Page" storageId="defaultFile"/>
+    <Item cached="true" typeMapping="Binary" storageId="defaultFile"/>
+  </ItemTypes>
+    <License Location="env/conf/cd_licenses.xml"/>
+</Configuration>

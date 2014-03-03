@@ -1,0 +1,1 @@
+Add the Content Delivery license file (cd_licenses.xml) into this directory to be able to run the test cases.
