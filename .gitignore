@@ -14,6 +14,7 @@ target/
 *.DS_Store
 *.swp
 *.out
+*.backup
 
 # C# and Visual Studio
 *.dll
@@ -22,3 +23,7 @@ obj/
 cms/lib/*.xml
 cms/upload/*.xml
 cms/upload/*.exe*
+
+# SDL Tridion license + software
+java/dd4t-lite-sdltridion/env/lib/*.jar
+java/dd4t-lite-sdltridion/env/conf/*.xml
