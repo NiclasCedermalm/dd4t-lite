@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2014 Niclas Cedermalm
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
