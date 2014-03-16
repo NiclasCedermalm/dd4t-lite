@@ -9,10 +9,15 @@
     <artifactId>dd4t-lite-sdltridion</artifactId>
     <name>${project.artifactId}</name>
     <version>0.0.1</version>
-
     <packaging>jar</packaging>
 
-    <inceptionYear>2013</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
