@@ -65,7 +65,7 @@ public class TestReadPages {
                 System.out.println("View name: " + cp.getComponentTemplate().getViewName());
                 System.out.println("Component ID: " + cp.getComponent().getId());
                 for ( Field field : cp.getComponent().getContent() ) {
-                    System.out.println("Field name=" + field.getName() + ", type=" + field.getType());
+                    System.out.println("Field name=" + field.getName() + ", type=" + field.getType() + ", is multivalue=" + field.isMultiValue());
                     for ( Object value: field.getValues() ) {
                         System.out.println("Value: " + value);
                     }

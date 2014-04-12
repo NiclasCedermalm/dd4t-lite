@@ -13,12 +13,12 @@
                     -->
                     <component id="tcm:1-4567" title="Article #1">
                          <content>
-                             <field name="field1" type="Text" xpath="">
+                             <field name="field1" type="Text" xpath="" multivalue="false">
                                  <values>
                                     <text>VALUE1</text>
                                  </values>
                              </field>
-                             <field name="field2" type="Embedded" xpath="">
+                             <field name="field2" type="Embedded" xpath="" multivalue="false">
                                  <values>
                                     <embedded>
                                         <field name="subfield1" type="Text">
@@ -30,41 +30,41 @@
                                     </embedded>
                                  </values>
                              </field>
-                             <field name="field3" type="Keyword" xpath="">
+                             <field name="field3" type="Keyword" xpath=""  multivalue="true">
                                 <values>
                                     <keyword taxonomyId="tcm:1-3939" path="/path1/path2" key="KEYWORD1"/>
                                     <keyword taxonomyId="tcm:1-3940" path="/path1/path2" key="KEYWORD2"/>
                                     <keyword taxonomyId="tcm:1-3942" path="/path1/path2" key="KEYWORD3"/>
                                 </values>
                              </field>
-                            <field name="field4" type="Date" xpath="">
+                            <field name="field4" type="Date" xpath=""  multivalue="false">
                                 <values>
                                     <date>2014-01-01T12:00:00</date>
                                 </values>
                             </field>
-                             <field name="field5" type="MultiMediaLink" xpath="">
+                             <field name="field5" type="MultiMediaLink" xpath="" multivalue="false">
                                  <values>
                                      <multimedia>/assets/img1.jpg</multimedia>
                                  </values>
                              </field>
-                             <field name="field5" type="MultiMediaLink" xpath="">
+                             <field name="field5" type="MultiMediaLink" xpath=""  multivalue="false">
                                  <values>
                                      <multimedia>/assets/img1.jpg</multimedia>
                                  </values>
                              </field>
-                             <field name="field6" type="ComponentLink" xpath="">
+                             <field name="field6" type="ComponentLink" xpath=""  multivalue="false">
                                  <values>
                                      <componentLink>tcm:1-39330</componentLink>
                                  </values>
                              </field>
-                             <field name="field7" type="Xhtml" xpath="">
+                             <field name="field7" type="Xhtml" xpath=""  multivalue="false">
                                  <values>
                                      <xhtml><![CDATA[<p>Some <b>HTML</b> comes here</p>]]></xhtml>
                                  </values>
                              </field>
                          </content>
                         <metadata>
-                            <field name="metadata1" type="Text" xpath="">
+                            <field name="metadata1" type="Text" xpath=""  multivalue="false">
                                 <values>
                                     <text>VALUE1</text>
                                 </values>
@@ -87,7 +87,7 @@
         </metadata>
     </template>
     <metadata>
-        <field name="description" type="Text" xpath="">
+        <field name="description" type="Text" xpath="" multivalue="false">
             <values>
                 <text>Very cool page</text>
             </values>

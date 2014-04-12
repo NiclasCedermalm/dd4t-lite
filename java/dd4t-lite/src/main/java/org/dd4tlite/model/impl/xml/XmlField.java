@@ -35,6 +35,9 @@ public class XmlField implements Field {
     private String type;
 
     @Attribute (required = false)
+    private boolean multivalue;
+
+    @Attribute (required = false)
     private String xpath;
 
     @Element
@@ -53,6 +56,11 @@ public class XmlField implements Field {
     @Override
     public List<? extends Object> getValues() {
         return this.values.getValues();
+    }
+
+    @Override
+    public boolean isMultiValue() {
+        return this.multivalue;
     }
 
     @Override

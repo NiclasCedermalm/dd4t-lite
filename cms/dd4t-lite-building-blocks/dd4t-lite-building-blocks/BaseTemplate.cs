@@ -267,6 +267,16 @@ namespace DD4TLite.BuildingBlocks
             return "\"" + value + "\"";
         }
 
+        protected string GetQuotedString(int value)
+        {
+            return "\"" + value + "\""; 
+        }
+
+        protected string GetQuotedString(bool value)
+        {
+            return "\"" + value.ToString().ToLower() + "\"";
+        }
+
         protected void AddOutputToPackage(StringBuilder sb)
         {
             Item componentPresentation = Package.CreateHtmlItem(sb.ToString());
@@ -291,6 +301,8 @@ namespace DD4TLite.BuildingBlocks
                 sb.Append(GetQuotedString(field.Name));
                 sb.Append(" type=");
                 sb.Append(GetQuotedString(GetFieldType(field)));
+                sb.Append(" multivalue=");
+                sb.Append(GetQuotedString(field.Definition.MaxOccurs != 1));
                 sb.Append(" xpath=");
                 sb.Append(GetQuotedString("TBD")); // TODO: How to get the XPath????
                 sb.Append(">\n");
@@ -345,7 +357,6 @@ namespace DD4TLite.BuildingBlocks
         {
 
             // TODO: How to resolve component links???
-
             foreach (string xhtmlValue in field.Values)
             {
                 sb.Append("<xhtml>\n<![CDATA[");

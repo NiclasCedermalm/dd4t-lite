@@ -56,4 +56,11 @@ public interface Field {
      * @return the field type
      */
     public FieldType getType();
+
+    /**
+     * Indicates if the field is an multi value field.
+     *
+     * @return true if the field is multi value field
+     */
+    public boolean isMultiValue();
 }
