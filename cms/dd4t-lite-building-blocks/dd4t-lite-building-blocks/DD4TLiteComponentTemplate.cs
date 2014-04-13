@@ -48,6 +48,10 @@ namespace DD4TLite.BuildingBlocks
              sb.Append(">\n");
              this.OutputContentFields(component, sb);
              sb.Append("</component>\n");
+             if (component.ComponentType == ComponentType.Multimedia)
+             {
+                 this.AddMultiMediaComponentToPackage(component);
+             }
          }
 
          private void OutputContentFields(Component component, StringBuilder sb)
