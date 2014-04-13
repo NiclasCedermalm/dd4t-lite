@@ -24,6 +24,8 @@ import org.dd4tlite.model.impl.xml.XmlPage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,10 +39,13 @@ public class RawXmlPageFactory implements PageFactory {
     static private Log log = LogFactory.getLog(RawXmlPageFactory.class);
 
     private String rootDirectory;
-    private Map<Class<?>, Object> dependencies = null;
+    private Map<Class<?>, Object> dependencies;
 
     public RawXmlPageFactory(String rootDirectory) {
         this.rootDirectory = rootDirectory;
+        if ( this.dependencies == null ) {
+            this.dependencies = new HashMap<Class<?>,Object>();
+        }
     }
 
     public RawXmlPageFactory(String rootDirectory, Map<Class<?>, Object> dependencies) {
@@ -58,12 +63,13 @@ public class RawXmlPageFactory implements PageFactory {
             String path = xmlFile.getParent();
             String filename = xmlFile.getName();
 
-            try {
+            //try {
                 return XmlPage.load(path, filename, inputStream, this.dependencies);
-            }
-            catch ( Exception e ) {
-                log.error("Could not load XML page!", e);
-            }
+            //}
+            //catch ( Exception e ) {
+            //    log.error("Could not load XML page!", e);
+                // TODO: Throw an exception here...??
+            //}
         }
         return null;
 
