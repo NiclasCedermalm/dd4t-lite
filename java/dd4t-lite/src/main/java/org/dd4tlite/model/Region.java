@@ -29,4 +29,9 @@ public interface Region {
     public List<ComponentPresentation> getComponentPresentations();
 
     public Template getTemplate();
+
+    public List<Constraint> getConstraints();
+
+    public <T extends Constraint> T getConstraint(Class<T> type);
+
 }

@@ -17,10 +17,7 @@ package org.dd4lite;
 
 import org.dd4tlite.factory.PageFactory;
 import org.dd4tlite.factory.rawxml.RawXmlPageFactory;
-import org.dd4tlite.model.ComponentPresentation;
-import org.dd4tlite.model.Field;
-import org.dd4tlite.model.Page;
-import org.dd4tlite.model.Region;
+import org.dd4tlite.model.*;
 import org.dd4tlite.service.LinkResolver;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +81,14 @@ public class TestReadPages {
                         System.out.println("Value: " + value);
                     }
                 }
+            }
+            System.out.println("Region constraints:");
+            for ( Constraint constraint : region.getConstraints() ) {
+                System.out.println("Constraint: " + constraint.getClass());
+            }
+            EditableRegionConstraint erConstraint = region.getConstraint(EditableRegionConstraint.class);
+            if ( erConstraint != null ) {
+                System.out.println("Editable region constraint minOccurs: " + erConstraint.getMinOccurs() + ", maxOccurs: " + erConstraint.getMaxOccurs());
             }
         }
         System.out.println("Page view name: " + page.getPageTemplate().getViewName());

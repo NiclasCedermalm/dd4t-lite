@@ -15,17 +15,17 @@
  */
 package org.dd4tlite.model.impl.xml;
 
-import org.dd4tlite.model.ComponentPresentation;
-import org.dd4tlite.model.Region;
-import org.dd4tlite.model.Template;
+import org.dd4tlite.model.*;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.ElementListUnion;
 
 import java.util.Date;
 import java.util.List;
 
 /**
+ * XmlRegion
  * @author nic
  */
 public class XmlRegion implements Region {
@@ -38,6 +38,13 @@ public class XmlRegion implements Region {
 
     @Element (required = false)
     private XmlTemplate template;
+
+
+    @ElementListUnion({
+            @ElementList(entry="editableRegionConstraint", inline=false, type=XmlEditableRegionConstraint.class, required = false)
+            // Here can other possible regions be specified
+    })
+    private List<Constraint> constraints;
 
     @Override
     public String getName() {
@@ -52,6 +59,23 @@ public class XmlRegion implements Region {
     @Override
     public Template getTemplate() {
         return this.template;
+    }
+
+    @Override
+    public List<Constraint> getConstraints() {
+        return this.constraints;
+    }
+
+    @Override
+    public <T extends Constraint> T getConstraint(Class<T> type) {
+        for ( Constraint constraint : this.constraints ) {
+            for ( Class<?> constraintInterface : constraint.getClass().getInterfaces() ) {
+                if (constraintInterface.isAssignableFrom(type)) {
+                    return (T) constraint;
+                }
+            }
+        }
+        return null;
     }
 
 }

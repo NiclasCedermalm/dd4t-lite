@@ -80,6 +80,14 @@
             <template id="tcm:1-5667" title="Std Region" viewName="region">
                 <metadata></metadata>
             </template>
+            <constraints>
+                <editableRegionConstraint minOccurs="0" maxOccurs="4">
+                    <componentPresentationTypes>
+                        <componentPresentationType schemaId="tcm:1-7777" templateId="tcm:1-5667"/>
+                        <componentPresentationType schemaId="tcm:1-7778" templateId="tcm:1-5668"/>
+                    </componentPresentationTypes>
+                </editableRegionConstraint>
+            </constraints>
         </region>
     </regions>
     <template id="tcm:1-5666" title="Std Page" viewName="stdPage">
