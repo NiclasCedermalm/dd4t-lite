@@ -83,7 +83,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>Z:\Develop\Projects\SDL\DD4T-Lite\dd4t-lite\cms\upload\TcmUploadAssembly.exe /folder:tcm:2-94-2 Z:\Develop\Projects\SDL\DD4T-Lite\dd4t-lite\cms\upload\config.xml "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>Z:\Develop\Projects\SDL\DD4T-Lite\dd4t-lite\cms\upload\TcmUploadAssembly.exe /folder:tcm:1-7-2 Z:\Develop\Projects\SDL\DD4T-Lite\dd4t-lite\cms\upload\config.xml "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
