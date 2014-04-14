@@ -27,3 +27,20 @@ cms/upload/*.exe*
 # SDL Tridion license + software
 java/dd4t-lite-sdltridion/env/lib/*.jar
 java/dd4t-lite-sdltridion/env/conf/*.xml
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.Common.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.Common.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.Publishing.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.Queuing.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.TemplateTypes.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.Templating.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.TypeRegistration.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.xml
+
+cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.Logging.xml
