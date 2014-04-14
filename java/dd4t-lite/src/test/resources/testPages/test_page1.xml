@@ -1,16 +1,8 @@
 <page id="tcm:1-1234-64" title="Test Page 1" revisionDate="2014-01-01T12:00:00">
     <regions>
-        <!-- TODO: Add minOccur, maxOccur and componentTypes -->
         <region name="main">
             <componentPresentations>
                 <componentPresentation>
-                    <!-- TODO: Consider to have viewName as attribute to the component and skip the template element??
-                         Can the template element be helpful if we need to have metadata associated with the template
-                    -->
-                    <!-- Then we need to have a strategy of dynamic components -->
-                    <!--
-                    <dynamicComponent id=tcm:"1-4567" templateId="tcm:1
-                    -->
                     <component id="tcm:1-4567" title="Article #1">
                          <content>
                              <field name="field1" type="Text" xpath="" multivalue="false">
