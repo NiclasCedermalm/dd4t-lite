@@ -69,6 +69,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Tridion.ContentManager.TypeRegistration.dll</HintPath>
     </Reference>
+    <Reference Include="Tridion.ExternalContentLibrary, Version=7.1.0.103, Culture=neutral, PublicKeyToken=ddfc895746e5ee6b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Tridion.ExternalContentLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Tridion.ExternalContentLibrary.V2, Version=1.1.0.90, Culture=neutral, PublicKeyToken=ddfc895746e5ee6b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Tridion.ExternalContentLibrary.V2.dll</HintPath>
+    </Reference>
     <Reference Include="Tridion.Logging, Version=7.0.0.142, Culture=neutral, PublicKeyToken=ddfc895746e5ee6b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Tridion.Logging.dll</HintPath>
@@ -76,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTemplate.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="DD4TLiteComponentTemplate.cs" />
     <Compile Include="DD4TLitePageTemplate.cs" />
     <Compile Include="DD4TLiteRegionTemplate.cs" />

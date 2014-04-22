@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tridion.ContentManager.CommunicationManagement;
 using Tridion.ContentManager.ContentManagement;
+using Tridion.ContentManager.ContentManagement.Fields;
 using Tridion.ContentManager.Templating;
 using Tridion.ContentManager.Templating.Assembly;
 
@@ -38,7 +39,8 @@ namespace DD4TLite.BuildingBlocks
             sb.Append(GetQuotedString(page.Id));
             sb.Append(" title=");
             sb.Append(GetQuotedString(page.Title));
-            // TODO: Output revision date here!!!
+            sb.Append(" revisionDate=");
+            sb.Append(GetQuotedString(page.RevisionDate.ToString("s")));
             sb.Append(">\n");
             this.OutputRegions(sb);
             this.OutputTemplate(sb);
@@ -50,44 +52,74 @@ namespace DD4TLite.BuildingBlocks
         {
             sb.Append("<regions>\n");
             IComponentPresentationList componentPresentations = this.GetComponentPresentations();
-            IComponentPresentationList regionComponents = null;
-            Tridion.ContentManager.Templating.ComponentPresentation region;
+         
+            Region region = null;
+            Region innerRegion = null;
 
             foreach (Tridion.ContentManager.Templating.ComponentPresentation componentPresentation in componentPresentations)
             {
                 Component component = new Component(componentPresentation.ComponentUri, Engine.GetSession());
+                ComponentTemplate template = new ComponentTemplate(componentPresentation.TemplateUri, Engine.GetSession());
                 Log.Debug("Checking component of type: " + component.Schema.Title);
 
                 // TODO: How to handle region schemas?? What pattern to look for??? Find a more generic approach than looking on the schema title
         
                 if (component.Schema.Title.Equals("DD4T Lite Region"))
                 {
-                    if (regionComponents != null)
+                    if (region != null)
                     {
-                        this.OutputRegion(region, regionComponents, sb);
-                        regionComponents = null;
+                        sb.Append(this.RenderRegion(region));
                     }
-                    region = componentPresentation;
-                    regionComponents = new ComponentPresentationList();
+                    region = new Region(component, template);
+                    innerRegion = null;
                 }
-                else if (regionComponents != null)
+                else if ( innerRegion != null && innerRegion.Accept(component, template) )
                 {
-                    regionComponents.Add(componentPresentation);
+                    innerRegion.AddComponentPresentation(new ComponentPresentationInfo(component, template));
+                }
+                else if (region != null)
+                {
+                    innerRegion = null; // Clear inner region
+                    Log.Debug("Adding component: " + component.Title + " to region: " + region.Name);
+                    ComponentPresentationInfo cpInfo = new ComponentPresentationInfo(component, template);
+                    region.AddComponentPresentation(cpInfo);
+                    if (this.IsContainerComponent(template))
+                    {
+                        innerRegion = new Region(this.GetInnerRegion(template));
+                        cpInfo.InnerRegion = innerRegion;
+                    }
                 }
             }
-            if (regionComponents != null)
+            if (region != null)
             {
-                this.OutputRegion(region, regionComponents, sb);
+                Log.Debug("Outputting region: " + region.Name);            
+                sb.Append(this.RenderRegion(region));
             }
             sb.Append("</regions>\n");
         }
 
-        private void OutputRegion(Tridion.ContentManager.Templating.ComponentPresentation region, IComponentPresentationList regionComponents, StringBuilder sb)
+        private bool IsContainerComponent(ComponentTemplate template)
         {
-            Log.Debug("Outputting region...");
-            this.SetSharedParameter("regionComponents", regionComponents);
-            sb.Append(this.Engine.RenderComponentPresentation(region.ComponentUri, region.TemplateUri));
+            ItemFields metadata = this.GetMetaData(template);
+            return metadata != null && metadata.Contains("innerRegion") && metadata["innerRegion"] != null;
         }
 
+        private Component GetInnerRegion(ComponentTemplate template)
+        {
+            Component innerRegion = null;
+            ItemFields metadata = this.GetMetaData(template);
+            ComponentLinkField innerRegionField = (ComponentLinkField) metadata["innerRegion"];
+            if (innerRegionField != null)
+            {
+                innerRegion = innerRegionField.Value;
+            }
+            return innerRegion;
+        }
+
+        private string RenderRegion(Region region)
+        {
+            this.SetSharedParameter("region", region);
+            return this.Engine.RenderComponentPresentation(region.Component.Id, region.Template.Id);
+        }
     }
 }

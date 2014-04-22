@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Tridion.ContentManager;
@@ -12,6 +13,7 @@ using Tridion.ContentManager.ContentManagement.Fields;
 using Tridion.ContentManager.Publishing;
 using Tridion.ContentManager.Templating;
 using Tridion.ContentManager.Templating.Assembly;
+using Tridion.ExternalContentLibrary.V2;
 
 namespace DD4TLite.BuildingBlocks
 {
@@ -52,39 +54,39 @@ namespace DD4TLite.BuildingBlocks
 
         protected String GetPageUri()
         {
-            return Package.GetValue("Page.ID"); 
+            return Package.GetValue("Page.ID");
         }
 
         protected Component GetComponent()
         {
             String componentUri = this.GetComponentUri();
-            Component component = (Component) Engine.GetSession().GetObject(componentUri);
+            Component component = (Component)Engine.GetSession().GetObject(componentUri);
             return component;
         }
 
         protected Component GetComponent(TcmUri componentUri)
         {
-            return (Component) Engine.GetSession().GetObject(componentUri);
+            return (Component)Engine.GetSession().GetObject(componentUri);
         }
 
         protected ComponentTemplate GetComponentTemplate(TcmUri templateUri)
         {
-            return (ComponentTemplate) Engine.GetSession().GetObject(templateUri);
+            return (ComponentTemplate)Engine.GetSession().GetObject(templateUri);
         }
 
         protected Template GetTemplate()
         {
-            return (Template) Engine.GetSession().GetObject(this.GetTemplateUri());
+            return (Template)Engine.GetSession().GetObject(this.GetTemplateUri());
         }
 
         protected String GetComponentUri()
         {
-            return Package.GetValue("Component.ID"); 
+            return Package.GetValue("Component.ID");
         }
 
         protected TcmUri GetTemplateUri()
         {
-            return Engine.PublishingContext.ResolvedItem.Template.Id;         
+            return Engine.PublishingContext.ResolvedItem.Template.Id;
         }
 
         protected ItemFields GetItems(Component component)
@@ -157,20 +159,20 @@ namespace DD4TLite.BuildingBlocks
             return true;
         }
 
-    
+
 
         protected string UnicodeEscapeString(string str)
         {
             StringBuilder sb = new StringBuilder();
-            for (int i=0;i < str.Length; i++ )
+            for (int i = 0; i < str.Length; i++)
             {
                 char c = str[i];
-                
+
                 // Escape all characters above standard 7-bit ascii
                 //
-                if (c > 127 )
+                if (c > 127)
                 {
-                    sb.Append("\\u" + String.Format("{0:x4}", (int) c));
+                    sb.Append("\\u" + String.Format("{0:x4}", (int)c));
                 }
                 else
                 {
@@ -239,7 +241,7 @@ namespace DD4TLite.BuildingBlocks
 
         protected String GetParentAbsolutePath()
         {
-            return GetAbsolutePath((StructureGroup) GetPage().OrganizationalItem);
+            return GetAbsolutePath((StructureGroup)GetPage().OrganizationalItem);
         }
 
         protected void SetSharedParameter(String name, Object value)
@@ -269,7 +271,7 @@ namespace DD4TLite.BuildingBlocks
 
         protected string GetQuotedString(int value)
         {
-            return "\"" + value + "\""; 
+            return "\"" + value + "\"";
         }
 
         protected string GetQuotedString(bool value)
@@ -286,17 +288,30 @@ namespace DD4TLite.BuildingBlocks
 
         protected void OutputMetdataFields(RepositoryLocalObject item, StringBuilder sb)
         {
-            sb.Append("<metadata>\n");
-            this.OutputFields(this.GetMetaData(item), sb);
-            sb.Append("</metadata>\n");
+            if (item.Metadata != null )
+            {
+                ItemFields metadata = this.GetMetaData(item);
+                if (metadata.Count() > 0)
+                {
+                    sb.Append("<metadata>\n");
+                    this.OutputFields(metadata, sb, true);
+                    sb.Append("</metadata>\n");
+                }
+            }
         }
 
-        protected void OutputFields(ItemFields fields, StringBuilder sb)
+        protected void OutputFields(ItemFields fields, StringBuilder sb, Boolean isMetadata = false)
         {
             if (fields == null) return;
 
             foreach (ItemField field in fields)
             {
+                if (isMetadata && field.Name.Equals("innerRegion"))
+                {
+                    // Exclude inner region parameter from the template data
+                    //
+                    continue;
+                }
                 sb.Append("<field name=");
                 sb.Append(GetQuotedString(field.Name));
                 sb.Append(" type=");
@@ -355,7 +370,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputXhtmlValues(XhtmlField field, StringBuilder sb)
         {
-
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             // TODO: How to resolve component links???
             foreach (string xhtmlValue in field.Values)
             {
@@ -367,6 +386,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputTextValues(TextField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (string textValue in field.Values)
             {
                 sb.Append("<text>");
@@ -377,6 +401,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputNumberValues(NumberField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (double numberValue in field.Values)
             {
                 sb.Append("<number>");
@@ -387,6 +416,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputDateValues(DateField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (DateTime dateValue in field.Values)
             {
                 sb.Append("<date>");
@@ -397,6 +431,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputEmbeddedValues(EmbeddedSchemaField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (ItemFields embeddedValue in field.Values)
             {
                 sb.Append("<embedded>\n");
@@ -407,17 +446,50 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputMultimediaValues(MultimediaLinkField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
+            IEclSession eclSession = SessionFactory.CreateEclSession(Engine.GetSession());
+
             foreach (Component mmValue in field.Values)
             {
+                IEclUri eclUri = eclSession.TryGetEclUriFromTcmUri(mmValue.Id);
+                /*
+                if (!eclSession.HostServices.IsNullOrNullEclUri(eclUri))
+                {
+                    // TODO: Make a more general & elegant solution on this!!
+                    sb.Append("<ecl>");
+                    sb.Append(eclUri.ItemId);
+                    sb.Append("</ecl>");
+                }
+                 * */
+
                 // TODO: Append TCM ID as attribute here???
                 sb.Append("<multimedia>");
-                sb.Append(this.AddMultiMediaComponentToPackage(mmValue));
+                if (!eclSession.HostServices.IsNullOrNullEclUri(eclUri))
+                {
+                    sb.Append(eclUri.ItemId);
+                }
+                else
+                {
+                    sb.Append(this.AddMultiMediaComponentToPackage(mmValue));
+                }
                 sb.Append("</multimedia>");
+
             }
+
+            eclSession.Dispose();
         }
 
         private void OutputComponentLinkValues(ComponentLinkField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (Component component in field.Values)
             {
                 sb.Append("<componentLink>");
@@ -428,6 +500,11 @@ namespace DD4TLite.BuildingBlocks
 
         private void OutputKeywordValues(KeywordField field, StringBuilder sb)
         {
+            if (field.Values.Count() == 0)
+            {
+                sb.Append("<empty/>\n");
+                return;
+            }
             foreach (Keyword keyword in field.Values)
             {
                 sb.Append("<keyword taxonomyId=");
@@ -465,7 +542,7 @@ namespace DD4TLite.BuildingBlocks
             }
             else if (field is MultimediaLinkField)
             {
-                type = "Multimedia";
+                type = "MultiMediaLink";
             }
             else if (field is ComponentLinkField)
             {
@@ -485,18 +562,86 @@ namespace DD4TLite.BuildingBlocks
         protected void OutputTemplate(StringBuilder sb)
         {
             String viewName = this.Package.GetByName("viewName").GetAsString();
+            this.OutputTemplate(this.GetTemplate(), viewName, sb);
+        }
 
-            Template template = this.GetTemplate();
+        protected void OutputTemplate(Template template, StringBuilder sb)
+        {
+            String viewName = Regex.Match(template.Content, @"<viewName>(\w+)</viewName>").Groups[1].Value;
+            this.OutputTemplate(template, viewName, sb);
+        }
+
+        protected void OutputTemplate(Template template, String viewName, StringBuilder sb)
+        {
             sb.Append("<template id=");
             sb.Append(GetQuotedString(template.Id));
             sb.Append(" title=");
             sb.Append(GetQuotedString(template.Title));
             sb.Append(" viewName=");
             sb.Append(GetQuotedString(viewName));
+            sb.Append(" revisionDate=");
+            sb.Append(GetQuotedString(template.RevisionDate.ToString("s")));
             sb.Append(">\n");
             this.OutputMetdataFields(template, sb);
             sb.Append("</template>\n");
         }
 
+        protected void OutputRegion(Region region, StringBuilder sb)
+        {
+            sb.Append("<region name=");
+            sb.Append(GetQuotedString(region.Name));
+            sb.Append(">\n");
+            this.OutputComponentPresentations(region, sb);
+            if (region.Template != null)
+            {
+                this.OutputTemplate(region.Template, sb);
+            }
+            this.OutputConstraints(region, sb);
+            sb.Append("</region>\n");
+        }
+
+        // Default implementation, is overriden by subclasses
+        //
+        protected virtual void OutputComponentPresentations(Region region, StringBuilder sb)
+        {
+            sb.Append("<componentPresentations>\n");
+            foreach (ComponentPresentationInfo cp in region.ComponentPresentations)
+            {
+                sb.Append(this.Engine.RenderComponentPresentation(cp.ComponentUri, cp.TemplateUri));
+            }
+            sb.Append("</componentPresentations>\n");
+        }
+
+        protected void OutputConstraints(Region region, StringBuilder sb)
+        {
+            sb.Append("<constraints>\n");
+
+            if (region.ComponentTypes != null)
+            {
+                // TODO: Decouple the constraints further in the region (link component or similiar)
+
+                // Right now only Editable Region Constraint is implemented
+                //
+                sb.Append("<editableRegionConstraint minOccurs=\"");             
+                sb.Append(region.MinOccurs);
+                sb.Append("\" maxOccurs=\"");
+                sb.Append(region.MaxOccurs);
+                sb.Append("\">\n");
+                sb.Append("<componentPresentationTypes>\n");
+                foreach (ComponentType componentType in region.ComponentTypes)
+                {
+                    sb.Append("<componentPresentationType schemaId=\"");
+                    sb.Append(componentType.SchemaUri);
+                    sb.Append("\" templateId=\"");
+                    sb.Append(componentType.TemplateUri);
+                    sb.Append("\"/>\n");
+                }
+                sb.Append("</componentPresentationTypes>\n");
+                sb.Append("</editableRegionConstraint>\n");
+            }
+            sb.Append("</constraints>\n");
+        }
+
     }
+
 }
