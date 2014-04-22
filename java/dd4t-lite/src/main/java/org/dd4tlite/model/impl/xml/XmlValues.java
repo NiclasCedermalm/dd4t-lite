@@ -15,6 +15,7 @@
  */
 package org.dd4tlite.model.impl.xml;
 
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementListUnion;
 
@@ -34,8 +35,10 @@ public class XmlValues {
             @ElementList(entry="keyword", inline=true, type=XmlKeywordValue.class),
             @ElementList(entry="date", inline=true, type=XmlDateField.class),
             @ElementList(entry="multimedia", inline=true, type=XmlMultimediaLink.class),
+            //@ElementList(entry="ecl", inline=true, type=XmlEclValue.class),
             @ElementList(entry="componentLink", inline=true, type=XmlComponentLink.class),
-            @ElementList (entry="embedded",inline=true, type=XmlEmbeddedValue.class)
+            @ElementList(entry="embedded", inline=true, type=XmlEmbeddedValue.class),
+            @ElementList(entry="empty", inline=true, type=XmlEmptyValue.class)
     })
     private List<XmlValue> values;
 
@@ -43,7 +46,9 @@ public class XmlValues {
 
         ArrayList<Object> convertedValues = new ArrayList<>();
         for ( XmlValue value : values ) {
-            convertedValues.add(value.getValue());
+            if ( !(value instanceof XmlEmptyValue) ) {
+                convertedValues.add(value.getValue());
+            }
         }
         return convertedValues;
     }
