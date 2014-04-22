@@ -18,6 +18,7 @@ package org.dd4tlite.model.impl.xml;
 import org.dd4tlite.model.Component;
 import org.dd4tlite.model.Field;
 import org.dd4tlite.model.Schema;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
 import java.util.List;
@@ -32,10 +33,12 @@ public class XmlComponent extends XmlItem implements Component {
     @ElementList (required = false, type=XmlField.class)
     private List<Field> content;
 
+    @Element
+    private XmlSchema schema;
 
     @Override
     public Schema getSchema() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.schema;
     }
 
     @Override
@@ -45,7 +48,12 @@ public class XmlComponent extends XmlItem implements Component {
 
     @Override
     public Field getContent(String fieldName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        for ( Field field : content ) {
+            if ( field.getName().equals(fieldName) ) {
+                return field;
+            }
+        }
+        return null;
     }
 
 
