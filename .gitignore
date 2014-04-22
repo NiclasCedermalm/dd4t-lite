@@ -44,3 +44,17 @@ cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.Conten
 cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.ContentManager.xml
 
 cms/dd4t-lite-building-blocks/dd4t-lite-building-blocks/bin/Debug/Tridion.Logging.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.Common.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.ContentManager.Common.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.ContentManager.Queuing.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.ContentManager.TemplateTypes.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.ContentManager.TypeRegistration.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.ContentManager.xml
+
+cms/region-gravity-extension/region-gravity-extension/region-gravity-extension/bin/Debug/Tridion.Logging.xml

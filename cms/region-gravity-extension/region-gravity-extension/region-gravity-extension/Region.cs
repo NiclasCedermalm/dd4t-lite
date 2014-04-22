@@ -1,0 +1,237 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Tridion.ContentManager;
+using Tridion.ContentManager.CommunicationManagement;
+using Tridion.ContentManager.ContentManagement;
+using Tridion.ContentManager.ContentManagement.Fields;
+using Tridion.Logging;
+
+namespace DD4TLite.Extensions.Region
+{
+    public class Region
+    {
+        protected Page page;
+        protected Component regionComponent;
+        private ItemFields regionFields;
+
+        static public IList<Region> GetRegions(Page page)
+        {
+            IList<Region> regions = new List<Region>();
+            Region currentRegion = null;
+            InnerRegion innerRegion = null;
+            foreach (ComponentPresentation cp in page.ComponentPresentations )
+            {
+                if ( IsRegion(cp) )
+                {                  
+                    currentRegion = new Region(page, cp.Component);
+                    regions.Add(currentRegion);
+                }
+                else if (innerRegion != null && innerRegion.CanContain(cp))
+                {
+                    innerRegion.AddToComponentPresentationList(cp);
+                }
+                else
+                {
+                    if (currentRegion != null)
+                    {
+                        ComponentPresentationInfo cpInfo = currentRegion.AddToComponentPresentationList(cp);
+                        innerRegion = cpInfo.InnerRegion;
+                    }
+                }     
+            }
+       
+            return regions;
+        }
+
+        static public bool IsRegion(ComponentPresentation componentPresentation)
+        {
+            return componentPresentation.Component.Schema.Title.Equals("DD4T Lite Region");
+        }
+
+        protected Region(Page page, Component regionComponent)
+        {
+            this.page = page;
+            this.regionComponent = regionComponent;
+            this.ComponentPresentations = new List<ComponentPresentationInfo>();
+            this.regionFields = new ItemFields(this.regionComponent.Content, this.regionComponent.Schema);
+        }
+
+        public String Name 
+        {
+            get { return this.regionComponent.Title; }
+        }
+
+        public IList<ComponentType> ComponentTypes
+        {
+            get 
+            {
+                IList<ComponentType> componentTypeList = new List<ComponentType>();
+                int publicationId = regionComponent.Id.PublicationId;
+                EmbeddedSchemaField componentTypes = (EmbeddedSchemaField) regionFields["componentTypes"];
+                foreach (ItemFields componentType in componentTypes.Values)
+                {
+                    NumberField schema = (NumberField)componentType["schemaId"];
+                    NumberField template = (NumberField)componentType["templateId"];
+                    TcmUri schemaUri =  new TcmUri("tcm:" + publicationId + "-" + (int) schema.Value + "-8");
+                    TcmUri templateUri =  new TcmUri("tcm:" + publicationId + "-" + (int) template.Value + "-32");
+                    componentTypeList.Add(new ComponentType(schemaUri, templateUri));
+                }
+                return componentTypeList;
+            }
+        }
+
+        public int MinOccurs
+        {
+            get
+            {
+                return (int) ((NumberField)regionFields["minOccurs"]).Value;
+            }
+        }
+
+        public int MaxOccurs
+        {
+            get
+            {
+                return (int)((NumberField)regionFields["maxOccurs"]).Value;
+            }
+        }
+
+        public IList<ComponentPresentationInfo> ComponentPresentations { get; private set; }
+
+        public IList<ComponentPresentation> GetNonMatchingComponentPresentations()
+        {
+            IList<ComponentPresentation> nonMatchingList = new List<ComponentPresentation>();
+            foreach (ComponentPresentationInfo cp in this.ComponentPresentations)
+            {
+                if (this.CanContain(cp.ComponentPresentation) == false)
+                {
+                    nonMatchingList.Add(cp.ComponentPresentation);
+                }
+            }
+            return nonMatchingList;
+        }
+
+        public bool CanContain(ComponentPresentation componentPresentation)
+        {
+            if (this.ComponentPresentations.Count < this.MaxOccurs)
+            {
+                foreach (ComponentType componentType in this.ComponentTypes)
+                {
+                    if (componentPresentation.Component.Schema.Id.Equals(componentType.SchemaUri) &&
+                         componentPresentation.ComponentTemplate.Id.Equals(componentType.TemplateUri))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private ComponentPresentationInfo AddToComponentPresentationList(ComponentPresentation componentPresentation)
+        {
+            ComponentPresentationInfo cpInfo = new ComponentPresentationInfo(this.page, componentPresentation);
+            this.ComponentPresentations.Add(cpInfo);
+            return cpInfo;
+        }
+
+        public virtual void Add(ComponentPresentation componentPresentation)
+        {
+            int pageIndex = 0;
+            bool foundMyself = false;
+            foreach (ComponentPresentation cp in this.page.ComponentPresentations)
+            {
+                if (cp.Component.Equals(this.regionComponent))
+                {
+                    foundMyself = true;
+                }
+                else if (foundMyself && IsRegion(cp))
+                {
+                    // TODO: This insert the CP first in the region. Correct really???
+                    // The extension is probably only used for the first component in the region...
+                    //
+                    page.ComponentPresentations.Insert(pageIndex, componentPresentation);
+
+                    break;
+                }
+                pageIndex++;
+            }
+        }
+
+    }
+
+    public class InnerRegion : Region
+    {
+        public InnerRegion(Page page, Component regionComponent, Component containerComponent) : base(page, regionComponent) 
+        {
+            this.ContainerComponent = containerComponent;
+        }
+
+        public Component ContainerComponent { get; private set; }
+
+        public override void Add(ComponentPresentation componentPresentation)
+        {
+            int pageIndex = 0;
+            bool foundMyself = false;
+            foreach (ComponentPresentation cp in this.page.ComponentPresentations)
+            {
+                if (cp.Component.Equals(this.ContainerComponent))
+                {
+                    foundMyself = true;
+                }
+                else if (foundMyself )
+                {
+                    // TODO: This insert the CP first in the region. Correct really???
+                    // The extension is probably only used for the first component in the region...
+                    //
+                    page.ComponentPresentations.Insert(pageIndex, componentPresentation);
+
+                    break;
+                }
+                pageIndex++;
+            }
+        }
+    }
+
+    public class ComponentType
+    {
+        public ComponentType(TcmUri schemaUri, TcmUri templateUri)
+        {
+            SchemaUri =schemaUri;
+            TemplateUri = templateUri;
+        }
+
+        public TcmUri SchemaUri { get; private set; }
+        public TcmUri TemplateUri { get; private set; }
+    }
+
+    public class ComponentPresentationInfo
+    {
+        public ComponentPresentationInfo(Page page, ComponentPresentation componentPresentation)
+        {
+            ComponentPresentation = componentPresentation;
+            InnerRegion = GetInnerRegion(page, componentPresentation.ComponentTemplate);
+        }
+
+        public ComponentPresentation ComponentPresentation { get; private set; }
+        public InnerRegion InnerRegion { get; private set; }
+
+        private InnerRegion GetInnerRegion(Page page, ComponentTemplate template)
+        {
+            if (template.Metadata != null)
+            {
+                ItemFields metadata = new ItemFields(template.Metadata, template.MetadataSchema);
+                if (metadata != null && metadata.Contains("innerRegion") && metadata["innerRegion"] != null)
+                {
+                    ComponentLinkField innerRegionField = (ComponentLinkField) metadata["innerRegion"];
+                    return new InnerRegion(page, innerRegionField.Value, ComponentPresentation.Component); 
+                }
+            }
+            return null;
+        }
+
+    }
+}
