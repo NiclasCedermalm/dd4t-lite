@@ -17,6 +17,7 @@ package org.dd4tlite.model.impl.xml;
 
 import org.dd4tlite.model.Component;
 import org.dd4tlite.model.ComponentPresentation;
+import org.dd4tlite.model.Region;
 import org.dd4tlite.model.Template;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -39,6 +40,9 @@ public class XmlComponentPresentation implements ComponentPresentation {
     @Element
     private XmlTemplate template;
 
+    @Element ( required = false)
+    private XmlRegion region;
+
     @Override
     public boolean isDynamic() {
         return this.dynamic;
@@ -53,5 +57,8 @@ public class XmlComponentPresentation implements ComponentPresentation {
     public Component getComponent() {
         return this.component;
     }
+
+    @Override
+    public Region getInnerRegion() { return this.region; }
 
 }

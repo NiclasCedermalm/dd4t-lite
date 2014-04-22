@@ -54,6 +54,11 @@
                                      <xhtml><![CDATA[<p>Some <b>HTML</b> comes here</p>]]></xhtml>
                                  </values>
                              </field>
+                             <field name="field8" type="Text" xpath=""  multivalue="true">
+                                 <values>
+                                     <empty/>
+                                 </values>
+                             </field>
                          </content>
                         <metadata>
                             <field name="metadata1" type="Text" xpath=""  multivalue="false">
@@ -62,11 +67,36 @@
                                 </values>
                             </field>
                         </metadata>
+                        <schema id="tcm:1-6793-8" title="Test Schema" rootElementName="Content"/>
                     </component>
                     <template id="tcm:1-5664" title="Article Full" viewName="fullArticle">
                         <metadata>
                         </metadata>
                     </template>
+                    <region name="subRegion">
+                        <componentPresentations>
+                            <componentPresentation>
+                                <component id="tcm:1-4567" title="Inter Component #1">
+                                    <content>
+                                        <field name="field1" type="Text" xpath="" multivalue="false">
+                                            <values>
+                                                <text>VALUE1</text>
+                                            </values>
+                                        </field>
+                                    </content>
+                                    <schema id="tcm:1-6793-8" title="Test Schema" rootElementName="Content"/>
+                                </component>
+                                <template id="tcm:1-5566" title="Inner Template #1" viewName="innerTemplate"/>
+                            </componentPresentation>
+                        </componentPresentations>
+                        <constraints>
+                            <editableRegionConstraint minOccurs="0" maxOccurs="2">
+                                <componentPresentationTypes>
+                                    <componentPresentationType schemaId="tcm:1-7779" templateId="tcm:1-5566"/>
+                                </componentPresentationTypes>
+                            </editableRegionConstraint>
+                        </constraints>
+                    </region>
                 </componentPresentation>
             </componentPresentations>
             <template id="tcm:1-5667" title="Std Region" viewName="region">

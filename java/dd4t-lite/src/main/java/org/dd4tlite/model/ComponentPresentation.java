@@ -32,6 +32,6 @@ public interface ComponentPresentation {
 
     public Component getComponent();
 
-
+    public Region getInnerRegion();
 
 }

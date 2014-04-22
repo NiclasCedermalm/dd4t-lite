@@ -61,6 +61,7 @@ public class TestReadPages {
                 System.out.println("Is dynamic: " + cp.isDynamic());
                 System.out.println("View name: " + cp.getComponentTemplate().getViewName());
                 System.out.println("Component ID: " + cp.getComponent().getId());
+                System.out.println("Schema ID:" + cp.getComponent().getSchema().getId() + ", title: " + cp.getComponent().getSchema().getTitle());
                 for ( Field field : cp.getComponent().getContent() ) {
                     System.out.println("Field name=" + field.getName() + ", type=" + field.getType() + ", is multivalue=" + field.isMultiValue());
                     for ( Object value: field.getValues() ) {
@@ -79,6 +80,12 @@ public class TestReadPages {
                     System.out.println("Field name=" + field.getName() + ", type=" + field.getType());
                     for ( Object value: field.getValues() ) {
                         System.out.println("Value: " + value);
+                    }
+                }
+                if ( cp.getInnerRegion() != null ) {
+                    System.out.println("Inner region: " + cp.getInnerRegion().getName());
+                    for ( ComponentPresentation innerCp : cp.getInnerRegion().getComponentPresentations() ) {
+                        System.out.println("Inner component presentation: Component ID:" + innerCp.getComponent().getId() + ", Template ID: " + innerCp.getComponentTemplate().getId());
                     }
                 }
             }
