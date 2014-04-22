@@ -22,5 +22,5 @@ package org.dd4tlite.model;
  */
 public interface Schema extends Item {
 
-    public String getRootElement();
+    public String getRootElementName();
 }
