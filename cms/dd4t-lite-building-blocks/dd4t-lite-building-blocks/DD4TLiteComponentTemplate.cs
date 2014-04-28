@@ -61,6 +61,7 @@ namespace DD4TLite.BuildingBlocks
              sb.Append(GetQuotedString(component.RevisionDate.ToString("s")));
              sb.Append(">\n");
              this.OutputContentFields(component, sb);
+             this.OutputMetdataFields(component, sb);
              this.OutputSchema(component.Schema, sb);
              sb.Append("</component>\n");
           
@@ -89,7 +90,15 @@ namespace DD4TLite.BuildingBlocks
                  sb.Append("</content>\n");
                  eclSession.Dispose();
              }
-             else if (component.ComponentType != Tridion.ContentManager.ContentManagement.ComponentType.Multimedia)
+             else if (component.ComponentType == Tridion.ContentManager.ContentManagement.ComponentType.Multimedia)
+             { 
+                 sb.Append("<content>\n");
+                 sb.Append("<field name=\"image\" type=\"MultiMediaLink\" multivalue=\"false\"><values><multimedia>");
+                 sb.Append(this.AddMultiMediaComponentToPackage(component));
+                 sb.Append("</multimedia></values></field>\n");           
+                 sb.Append("</content>\n");
+             }
+             else
              {
                  sb.Append("<content>\n");
                  this.OutputFields(this.GetItems(component), sb);
