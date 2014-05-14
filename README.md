@@ -14,18 +14,20 @@ will be refactored into a seperate module when the framework grows.
 DD4T Lite is currently only implemented in Java, but a C# version
 will be implemented as soon I got time (or if I got volunteers to do that :-) ).
 
-The intention of DD4T Lite that it will support different page region models. Right now the "component based region"-model is implemented where regions are first-class citizens on
+DD4T Lite supports different page region models. Right now the "component based region"-model is implemented where regions are first-class citizens on
 a SDL Tridion page. Template based regions (i.e. when having metadata on templates to indicate what region a certain template belongs to) will be supported soon. The big advantage of
 using component based regions is that is much easier to reuse component templates to be used in other regions and provide a more flexible approach of using page regions.
 The advantage of having regions as components is that you open up the possibility to manage the region as an entity.
 It allows you to:
 
- * Control look&feel of a region (by using component templates)
+ * Control look & feel of a region (by using component templates)
  * Define constraints, such as configure what component types allowed in the region (used for XPM)
  * Annotate regions with metadata to control behaviour etc
  * Easily configure if the region is a pure XPM region or a SmartTarget region
 
 This unleash some new interesting capabilities to page regions, which can be handy in more complex setups when for example doing container containers (e.g. a carousel).
+There is also an TCM extension to SDL Tridion that make sure that added components is added to the correct region (based on its contraints). This can sometimes be a problem
+when using XPM where XPM do not know where to put the component on the page (often when it is the first component in a region). The extension triggers on page save events.
 
 CMS Setup
 ----------
