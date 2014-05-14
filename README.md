@@ -9,7 +9,9 @@ power of DD4T first of all is to provide an nice abstraction to published conten
 decouple from 3PP dependencies as much as possible.
 
 Another weak spot of DD4T is the extremely verbose XML format, which tends to be hideous for large pages. So this I have improving as well to minimize the information needed
-published from SDL Tridion CMS. Right now DD4T Lite has only support for XML, but JSON etc is easy to add-on later. DD4T Lite is currently only implemented in Java, but a C# version
+published from SDL Tridion CMS. Right now DD4T Lite has only support for XML, but JSON etc is easy to add-on later. Of simplicity the XML implementation is part of the core project, but it
+will be refactored into a seperate module when the framework grows.
+DD4T Lite is currently only implemented in Java, but a C# version
 will be implemented as soon I got time (or if I got volunteers to do that :-) ).
 
 The intention of DD4T Lite that it will support different page region models. Right now the "component based region"-model is implemented where regions are first-class citizens on
