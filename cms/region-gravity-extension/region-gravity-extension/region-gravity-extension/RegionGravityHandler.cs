@@ -11,7 +11,7 @@ using Tridion.Logging;
 
 namespace DD4TLite.Extensions.Region
 {
-    [TcmExtension("RegionGravityHandler")]
+    [TcmExtension("DD4TLite-RegionGravityHandler")]
     public class RegionGravityHandler : TcmExtension
     {
         
