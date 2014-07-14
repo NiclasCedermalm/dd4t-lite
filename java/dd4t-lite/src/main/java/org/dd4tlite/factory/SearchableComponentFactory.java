@@ -25,7 +25,7 @@ import java.util.Collection;
  *
  * @author nic
  */
-public interface SearchableComponentFactory extends ComponentFactory {
+public interface SearchableComponentFactory extends ComponentPresentationFactory {
 
     // TODO: Specify how filter expressions is specified
     // Use JUEL??

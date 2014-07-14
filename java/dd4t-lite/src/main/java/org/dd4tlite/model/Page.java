@@ -36,4 +36,6 @@ public interface Page extends Item {
 
     public Region getRegion(String title);
 
+    public boolean hasRegion(String title);
+
 }

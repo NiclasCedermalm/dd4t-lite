@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author nic
  */
-public interface Region {
+public interface  Region {
 
     public String getName();
 

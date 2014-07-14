@@ -19,11 +19,16 @@ import org.dd4tlite.model.Component;
 
 /**
  * Component Factory.
- * Interface to query dynamic components.
+ * Interface to query dynamic component presentations.
  *
  * @author nic
  */
-public interface ComponentFactory {
+public interface ComponentPresentationFactory {
 
-    public Component getComponent(String id);
+
+    // TODO: How should this be abstracted? Just component ID and template ID? But I do not know the template ID then...???
+    // If I know the template Id I might already know the view name? Or...??
+    // Comp Id + Template Id maybe make more sense when having dynamic components on a page
+
+    public Component getComponentPresentation(String componentId);
 }

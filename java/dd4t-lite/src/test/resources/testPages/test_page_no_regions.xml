@@ -1,0 +1,16 @@
+
+<page id="tcm:1-1234-64" title="Test Page 1" revisionDate="2014-01-01T12:00:00">
+    <regions>
+    </regions>
+    <template id="tcm:1-5666" title="Std Page" viewName="stdPage">
+        <metadata>
+        </metadata>
+    </template>
+    <metadata>
+        <field name="description" type="Text" xpath="" multivalue="false">
+            <values>
+                <text>Very cool page</text>
+            </values>
+        </field>
+    </metadata>
+</page>

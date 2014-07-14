@@ -107,4 +107,12 @@ public class TestReadPages {
             }
         }
     }
+
+    @Test
+    public void testReadPageWithNoRegions() throws Exception {
+        System.out.println("Reading page with no regions...");
+        Page page = this.pageFactory.getPage("/testPages/test_page_no_regions.xml");
+        System.out.println("Has region: " + page.hasRegion("main"));
+        System.out.println("Page ID: " + page.getId() + " Title: " + page.getTitle());
+    }
 }

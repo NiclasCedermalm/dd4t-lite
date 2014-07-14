@@ -27,10 +27,7 @@ import org.simpleframework.xml.core.XmlUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * XML Page
@@ -43,7 +40,7 @@ public class XmlPage extends XmlItem implements Page {
     private String filename;
 
     @ElementList (required = false, type=XmlRegion.class)
-    private List<Region> regions;
+    private List<Region> regions = new ArrayList<Region>();
 
     @Element
     private XmlTemplate template;
@@ -124,6 +121,16 @@ public class XmlPage extends XmlItem implements Page {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean hasRegion(String title) {
+        for ( Region region : this.regions ) {
+            if ( region.getName().equals(title) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

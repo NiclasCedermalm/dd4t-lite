@@ -21,6 +21,8 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementListUnion;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class XmlRegion implements Region {
     private String name;
 
     @ElementList (required = false, type=XmlComponentPresentation.class)
-    private List<ComponentPresentation> componentPresentations;
+    private List<ComponentPresentation> componentPresentations = new ArrayList<ComponentPresentation>();
 
     @Element (required = false)
     private XmlTemplate template;
