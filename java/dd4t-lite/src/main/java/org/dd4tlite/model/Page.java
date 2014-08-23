@@ -30,6 +30,8 @@ public interface Page extends Item {
 
     public List<ComponentPresentation> getComponentPresentations();
 
+    public ComponentPresentation getComponentPresentation(String id);
+
     public Template getPageTemplate();
 
     public List<Region> getRegions();

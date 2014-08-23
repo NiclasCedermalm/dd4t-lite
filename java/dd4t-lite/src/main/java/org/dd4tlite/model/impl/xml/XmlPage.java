@@ -23,6 +23,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Commit;
 import org.simpleframework.xml.core.XmlUtils;
 
 import java.io.File;
@@ -82,6 +83,18 @@ public class XmlPage extends XmlItem implements Page {
         }
     }
 
+    @Commit
+    public void build() {
+        for ( Region region : this.regions ) {
+            List<ComponentPresentation> componentPresentations = region.getComponentPresentations();
+            for ( int i=0; i < componentPresentations.size(); i++ ) {
+                XmlComponentPresentation cp = (XmlComponentPresentation) componentPresentations.get(i);
+                String cpId = region.getName() + "#" + i;
+                cp.setId(cpId);
+            }
+        }
+    }
+
     @Override
     public String getPath() {
         return this.path;
@@ -101,6 +114,20 @@ public class XmlPage extends XmlItem implements Page {
             }
         }
         return componentPresentations;
+    }
+
+    @Override
+    public ComponentPresentation getComponentPresentation(String id) {
+
+        StringTokenizer tokenizer = new StringTokenizer(id, "#");
+        String regionName = tokenizer.nextToken();
+        String index = tokenizer.nextToken();
+        Region region = this.getRegion(regionName);
+        if ( region != null ) {
+            ComponentPresentation cp = region.getComponentPresentations().get(Integer.parseInt(index));
+            return cp;
+        }
+        return null;
     }
 
     @Override

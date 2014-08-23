@@ -56,6 +56,7 @@ namespace DD4TLite.BuildingBlocks
             Region region = null;
             Region innerRegion = null;
 
+            int index = 0;
             foreach (Tridion.ContentManager.Templating.ComponentPresentation componentPresentation in componentPresentations)
             {
                 Component component = new Component(componentPresentation.ComponentUri, Engine.GetSession());
@@ -85,10 +86,11 @@ namespace DD4TLite.BuildingBlocks
                     region.AddComponentPresentation(cpInfo);
                     if (this.IsContainerComponent(template))
                     {
-                        innerRegion = new Region(this.GetInnerRegion(template));
+                        innerRegion = new Region(this.GetInnerRegion(template), index);
                         cpInfo.InnerRegion = innerRegion;
                     }
                 }
+                index++;
             }
             if (region != null)
             {

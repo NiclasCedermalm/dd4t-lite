@@ -43,6 +43,8 @@ public class XmlComponentPresentation implements ComponentPresentation {
     @Element ( required = false)
     private XmlRegion region;
 
+    private String id;
+
     @Override
     public boolean isDynamic() {
         return this.dynamic;
@@ -60,5 +62,12 @@ public class XmlComponentPresentation implements ComponentPresentation {
 
     @Override
     public Region getInnerRegion() { return this.region; }
+
+    @Override
+    public String getId() { return this.id; }
+
+    void setId(String id) {
+        this.id = id;
+    }
 
 }

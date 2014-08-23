@@ -34,4 +34,10 @@ public interface ComponentPresentation {
 
     public Region getInnerRegion();
 
+    /**
+     * The unique identity of the component presentation on the page
+     * @return identity
+     */
+    public String getId();
+
 }

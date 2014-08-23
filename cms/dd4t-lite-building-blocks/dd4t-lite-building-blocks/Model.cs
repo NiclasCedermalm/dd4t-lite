@@ -53,8 +53,15 @@ namespace DD4TLite.BuildingBlocks
         private ItemFields fields;
         private IList<ComponentType> componentTypes;
         private IList<ComponentPresentationInfo> componentPresentations = new List<ComponentPresentationInfo>();
+        private int index = -1; // This is primarly used to make inner regions unique
 
         public Region(Component regionComponent) : this(regionComponent, null) {}
+
+        public Region(Component regionComponent, int index)
+            : this(regionComponent, null)
+        {
+            this.index = index;
+        }
 
         public Region(Component regionComponent, ComponentTemplate regionTemplate)
         {
@@ -103,7 +110,16 @@ namespace DD4TLite.BuildingBlocks
 
         public string Name
         {
-            get { return ((TextField) this.fields["name"]).Value; }
+            get {
+                if (index == -1)
+                {
+                    return ((TextField)this.fields["name"]).Value;
+                }
+                else
+                {
+                    return ((TextField)this.fields["name"]).Value + "-" + index;
+                }
+            }
         }
 
         public int MinOccurs
