@@ -17,17 +17,27 @@ namespace DD4TLite.Extensions.Region
         protected Page page;
         protected Component regionComponent;
         private ItemFields regionFields;
+        private int index;
+        private int pageIndex;
 
         static public IList<Region> GetRegions(Page page)
         {
+            int regionCount = 0;
+            int pageIndex = 0;
             IList<Region> regions = new List<Region>();
             Region currentRegion = null;
             InnerRegion innerRegion = null;
+
+            // TODO: Have a better page index calculation algorithm that can handle reshuffle of component presentations
+            //
+
             foreach (ComponentPresentation cp in page.ComponentPresentations )
-            {
+            {             
                 if ( IsRegion(cp) )
                 {                  
                     currentRegion = new Region(page, cp.Component);
+                    currentRegion.Index = ++regionCount;
+                    currentRegion.pageIndex = pageIndex;
                     regions.Add(currentRegion);
                 }
                 else if (innerRegion != null && innerRegion.CanContain(cp))
@@ -40,8 +50,14 @@ namespace DD4TLite.Extensions.Region
                     {
                         ComponentPresentationInfo cpInfo = currentRegion.AddToComponentPresentationList(cp);
                         innerRegion = cpInfo.InnerRegion;
+                        if (innerRegion != null)
+                        {
+                            innerRegion.Index = ++regionCount;
+                            innerRegion.pageIndex = pageIndex;
+                        }
                     }
-                }     
+                }
+                pageIndex++; // This works only if we move the last item around....
             }
        
             return regions;
@@ -50,6 +66,29 @@ namespace DD4TLite.Extensions.Region
         static public bool IsRegion(ComponentPresentation componentPresentation)
         {
             return componentPresentation.Component.Schema.Title.Equals("DD4T Lite Region");
+        }
+
+        static public int ExtractRegionIndex(ComponentPresentationInfo componentPresentation)
+        {
+            return ExtractRegionIndex(componentPresentation.ComponentPresentation.ComponentTemplate.Id);
+        }
+
+        static public int ExtractRegionIndex(TcmUri templateUri)
+        {
+            String itemId = templateUri.ItemId.ToString();
+            if (itemId.Length > 6)
+            {
+                String regionId = itemId.Substring(itemId.Length - 3);
+                return Int32.Parse(regionId);
+            }
+            return -1;
+        }
+
+        static public TcmUri RemoveRegionIndex(TcmUri templateUri)
+        {
+            String itemId = templateUri.ItemId.ToString();
+            itemId = itemId.Substring(0, itemId.Length - 3);
+            return new TcmUri("tcm:" + templateUri.PublicationId + "-" + itemId + "-32");
         }
 
         protected Region(Page page, Component regionComponent)
@@ -100,6 +139,12 @@ namespace DD4TLite.Extensions.Region
             }
         }
 
+        public int Index
+        {
+            get { return this.index; }
+            private set { this.index = value; }
+        }
+
         public IList<ComponentPresentationInfo> ComponentPresentations { get; private set; }
 
         public IList<ComponentPresentation> GetNonMatchingComponentPresentations()
@@ -126,6 +171,7 @@ namespace DD4TLite.Extensions.Region
                     {
                         return true;
                     }
+
                 }
             }
             return false;
@@ -133,32 +179,17 @@ namespace DD4TLite.Extensions.Region
 
         private ComponentPresentationInfo AddToComponentPresentationList(ComponentPresentation componentPresentation)
         {
-            ComponentPresentationInfo cpInfo = new ComponentPresentationInfo(this.page, componentPresentation);
+            ComponentPresentationInfo cpInfo = new ComponentPresentationInfo(this.page, componentPresentation, this);
             this.ComponentPresentations.Add(cpInfo);
             return cpInfo;
         }
 
         public virtual void Add(ComponentPresentation componentPresentation)
         {
-            int pageIndex = 0;
-            bool foundMyself = false;
-            foreach (ComponentPresentation cp in this.page.ComponentPresentations)
-            {
-                if (cp.Component.Equals(this.regionComponent))
-                {
-                    foundMyself = true;
-                }
-                else if (foundMyself && IsRegion(cp))
-                {
-                    // TODO: This insert the CP first in the region. Correct really???
-                    // The extension is probably only used for the first component in the region...
-                    //
-                    page.ComponentPresentations.Insert(pageIndex, componentPresentation);
-
-                    break;
-                }
-                pageIndex++;
-            }
+            Logger.Write("Adding CP to page index: " + pageIndex, "RegionGravityHandler", LogCategory.Custom, System.Diagnostics.TraceEventType.Information);
+            this.AddToComponentPresentationList(componentPresentation);
+            page.ComponentPresentations.Insert(pageIndex + this.ComponentPresentations.Count(), componentPresentation);
+            
         }
 
     }
@@ -172,6 +203,7 @@ namespace DD4TLite.Extensions.Region
 
         public Component ContainerComponent { get; private set; }
 
+        /*
         public override void Add(ComponentPresentation componentPresentation)
         {
             int pageIndex = 0;
@@ -194,6 +226,7 @@ namespace DD4TLite.Extensions.Region
                 pageIndex++;
             }
         }
+         * */
     }
 
     public class ComponentType
@@ -210,18 +243,23 @@ namespace DD4TLite.Extensions.Region
 
     public class ComponentPresentationInfo
     {
-        public ComponentPresentationInfo(Page page, ComponentPresentation componentPresentation)
+
+        public ComponentPresentationInfo(Page page, ComponentPresentation componentPresentation, Region owner)
         {
             ComponentPresentation = componentPresentation;
             InnerRegion = GetInnerRegion(page, componentPresentation.ComponentTemplate);
+            RegionIndex = Region.ExtractRegionIndex(componentPresentation.ComponentTemplate.Id);
+            Owner = owner;
         }
 
         public ComponentPresentation ComponentPresentation { get; private set; }
         public InnerRegion InnerRegion { get; private set; }
-
+        public int RegionIndex { get; private set; }
+        public Region Owner { get; private set; }
+ 
         private InnerRegion GetInnerRegion(Page page, ComponentTemplate template)
         {
-            if (template.Metadata != null)
+            if (Region.ExtractRegionIndex(template.Id) == -1 && template.Metadata != null)
             {
                 ItemFields metadata = new ItemFields(template.Metadata, template.MetadataSchema);
                 if (metadata != null && metadata.Contains("innerRegion") && metadata["innerRegion"] != null)
